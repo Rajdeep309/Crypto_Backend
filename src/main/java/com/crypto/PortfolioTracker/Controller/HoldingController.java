@@ -52,6 +52,16 @@ public class HoldingController {
                 , HttpStatus.OK);
     }
 
+    @DeleteMapping("/public/delete-manual-holding")
+    public ResponseEntity<ApiResponse<String>> manualAddEdit(@RequestParam String assetSymbol) {
+
+        Long userId = getLoggedInUserId();
+
+        holdingService.deleteHolding(userId, assetSymbol);
+        return new ResponseEntity<>(new ApiResponse<>("Success", null)
+                , HttpStatus.OK);
+    }
+
     private Long getLoggedInUserId() {
         return Long.parseLong(
                 SecurityContextHolder.getContext()

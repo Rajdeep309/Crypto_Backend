@@ -48,4 +48,7 @@ public interface HoldingRepository extends JpaRepository<Holding, Long> {
     List<Holding> findByUser_Id(Long userId);
 
     List<Holding> findByUser_IdAndAssetSymbol(Long userId, String assetSymbol);
+
+    @Transactional
+    void deleteByUserIdAndAssetSymbolAndWalletType(Long userId, String assetSymbol, WalletTypes walletType);
 }

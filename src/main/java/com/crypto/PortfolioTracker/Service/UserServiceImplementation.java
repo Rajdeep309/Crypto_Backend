@@ -28,11 +28,15 @@ public class UserServiceImplementation implements UserService {
 
     private JavaMailSender mailSender;
 
+    private UserRepository.UserDetailsProjection findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Email not found"));
+    }
     @Override
     public UserCredentialDTO logIn(String email, String password) {
 
-        UserRepository.UserDetailsProjection user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Email not found"));
+        UserRepository.UserDetailsProjection user = findUserByEmail(email);
+
         if(passwordEncoder.matches(password, user.getPassword())) {
             String token = jwtUtil.GenerateToken(user.getId(), email);
             return new UserCredentialDTO(user.getId(), user.getName(), token);
@@ -52,8 +56,7 @@ public class UserServiceImplementation implements UserService {
     @Override
     public ForgetPasswordResponseDTO forgetPassword(String email) {
 
-        UserRepository.UserDetailsProjection user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Email not found"));
+        UserRepository.UserDetailsProjection user = findUserByEmail(email);
 
         Long id = user.getId();
         String name = user.getName();

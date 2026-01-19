@@ -217,18 +217,30 @@ public class HoldingServiceImplementation implements HoldingService {
         return holdingResponse;
     }
 
+    @Override
+    public void deleteHolding(Long userId, String assetSymbol) {
+        holdingRepository
+                .deleteByUserIdAndAssetSymbolAndWalletType
+                        (
+                        userId
+                        , assetSymbol
+                        , WalletTypes.WALLET
+                        );
+    }
+
     private void UpdateHoldingsDB(List<HoldingResponse> activeBalances, Long userId, Exchange exchange, WalletTypes walletType) {
 
         List<Holding> holdingsToSave = activeBalances.stream()
-                .map(dto -> {
-                    return new Holding(new User(userId)
-                            , dto.getAssetSymbol()
-                            , dto.getQuantity()
-                            , dto.getAvgCost()
-                            , exchange
-                            , walletType
-                            , null);
-                })
+                .map(dto ->
+                        new Holding(
+                        new User(userId)
+                        , dto.getAssetSymbol()
+                        , dto.getQuantity()
+                        , dto.getAvgCost()
+                        , exchange
+                        , walletType
+                        , null)
+                )
                 .toList();
 
         holdingRepository.saveAll(holdingsToSave);

@@ -14,4 +14,6 @@ public interface HoldingService {
     List<HoldingResponse> manualWalletRefresh(Long userId);
 
     HoldingResponse manualAddOrEdit(Long userId, HoldingDTO holdingInfo);
+
+    void deleteHolding(Long userId, String assetSymbol);
 }
